@@ -5,7 +5,9 @@ public class Room {
 
     public Room(int num, Dictionary<string, Activity[]> targets, TimeSpan duration) {
         var nodes = Nodes(targets, duration);
-        var groups = Cut(num, new HashSet<Node>(nodes.Values));
+        var counts = new int[num];
+        for (var i = 0; i < targets.Count; i++) counts[i % counts.Length]++;
+        var groups = Cut(new Queue<int>(counts), new HashSet<Node>(nodes.Values));
 
         Groups.AddRange(groups.Select(c => c.Nodes.Select(n => n.DeviceId).ToList()));
     }
@@ -55,9 +57,10 @@ public class Room {
         return nodes;
     }
 
-    public static List<Cluster> Cut(int count, HashSet<Node> remaining, List<Cluster>? clusters = null) {
+    public static List<Cluster> Cut(Queue<int> counts, HashSet<Node> remaining, List<Cluster>? clusters = null) {
         var c = new Cluster();
         var origin = remaining.ElementAt(Random.Shared.Next(remaining.Count));
+        var count = counts.Dequeue();
         for (var i = 0; i < count; i++) {
             if (remaining.Count == 0) break;
 
@@ -70,7 +73,7 @@ public class Room {
         }
         clusters ??= new List<Cluster>();
         clusters.Add(c);
-        if (remaining.Count != 0) Cut(count, remaining, clusters);
+        if (remaining.Count != 0) Cut(counts, remaining, clusters);
 
         return clusters;
     }

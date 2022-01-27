@@ -55,6 +55,6 @@ public class RoomTests {
     [Test]
     public void TestCut() {
         var nodes = Room.Nodes(TestData, TimeSpan.FromHours(1));
-        var results = Room.Cut(3, new HashSet<Room.Node>(nodes.Values));
+        var results = Room.Cut(new Queue<int>(new[]{3, 3}), new HashSet<Room.Node>(nodes.Values));
     }
 }
