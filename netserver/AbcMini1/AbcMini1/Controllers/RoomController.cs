@@ -20,8 +20,8 @@ public class RoomController : Controller {
         var duration = TimeSpan.FromHours(2);
         foreach (var deviceId in payload.DeviceIds) {
             var query = Db.Instance.Collection("activities")
-                .WhereEqualTo("deviceId", deviceId)
-                .WhereGreaterThan("timestamp", DateTime.UtcNow - duration);
+                .WhereEqualTo("DeviceId", deviceId)
+                .WhereGreaterThan("Timestamp", DateTime.UtcNow - duration);
             var ss = await query.GetSnapshotAsync();
             targets.Add(deviceId, ss.Documents.Select(x => x.ConvertTo<Activity>()).ToArray());
         }

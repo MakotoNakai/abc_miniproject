@@ -22,7 +22,7 @@ public class Room {
                 if (n1 != n2) n1.Scores.Add(n2, 0);
             }
         }
-        var last = DateTime.Now;
+        var last = DateTime.UtcNow;
         var first = last - duration;
         var activities = targets
             .ToDictionary(kv => kv.Key, kv => new DeviceActivity(kv.Key, kv.Value));
@@ -70,7 +70,7 @@ public class Room {
         }
         clusters ??= new List<Cluster>();
         clusters.Add(c);
-        if (remaining.Count != 0) clusters.AddRange(Cut(count, remaining, clusters));
+        if (remaining.Count != 0) Cut(count, remaining, clusters);
 
         return clusters;
     }
