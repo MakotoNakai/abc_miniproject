@@ -7,15 +7,6 @@ namespace AbcMini1.Controllers;
 [ApiController]
 [Route("[controller]")]
 public class ActivityController : Controller {
-    // GET
-    [HttpGet]
-    public async Task<IActionResult> Index() {
-        var query = Db.Instance.Collection("activities")
-            .WhereEqualTo("deviceId", "test")
-            .WhereGreaterThan("timestamp", DateTime.UtcNow.AddDays(-1));
-        var ss = await query.GetSnapshotAsync();
-        return Ok(ss.Documents.Select(x => x.ToDictionary()));
-    }
     
     /// <summary>
     /// （iOSアプリ用）行動データを記録します。
