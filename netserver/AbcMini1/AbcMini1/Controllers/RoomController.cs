@@ -17,14 +17,26 @@ public class RoomController : Controller {
     [Produces("application/json", Type = typeof(Room))]
     public async Task<IActionResult> Create([FromBody] CreatePayload payload) {
         var targets = new Dictionary<string, Activity[]>();
+        var duration = TimeSpan.FromHours(2);
         foreach (var deviceId in payload.DeviceIds) {
             var query = Db.Instance.Collection("activities")
-                .WhereEqualTo("deviceId", deviceId);
+                .WhereEqualTo("deviceId", deviceId)
+                .WhereGreaterThan("timestamp", DateTime.UtcNow - duration);
             var ss = await query.GetSnapshotAsync();
             targets.Add(deviceId, ss.Documents.Select(x => x.ConvertTo<Activity>()).ToArray());
         }
         
-        return Ok(Room.Create(payload.TeamNumber, targets));
+        return Ok(new Room(payload.TeamNumber, targets, duration));
+    }
+    
+    /// <summary>
+    /// 応答テスト用 パラメータが正しければ"your request is ok"を返す
+    /// </summary>
+    /// <param name="payload"></param>
+    /// <returns></returns>
+    [HttpPost("check")]
+    public IActionResult Check([FromBody] CreatePayload payload) {
+        return Ok("your request is ok");
     }
     
     public class CreatePayload {

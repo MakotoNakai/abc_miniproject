@@ -23,6 +23,12 @@ app.UseSwagger();
 app.UseSwaggerUI();
 // }
 
+app.UseHttpLogging();
+
+app.UseCors(options => {
+    options.AllowAnyOrigin();
+});
+
 // app.UseHttpsRedirection();
 
 // app.UseAuthorization();

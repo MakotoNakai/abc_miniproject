@@ -11,9 +11,10 @@ public class ActivityController : Controller {
     [HttpGet]
     public async Task<IActionResult> Index() {
         var query = Db.Instance.Collection("activities")
-            .WhereEqualTo("DeviceId", "3");
+            .WhereEqualTo("deviceId", "test")
+            .WhereGreaterThan("timestamp", DateTime.UtcNow.AddDays(-1));
         var ss = await query.GetSnapshotAsync();
-        return Ok();
+        return Ok(ss.Documents.Select(x => x.ToDictionary()));
     }
     
     /// <summary>
@@ -35,7 +36,7 @@ public class ActivityController : Controller {
             dt = DateTime.SpecifyKind(dt, DateTimeKind.Utc);
             await col.AddAsync(new Activity {
                 DeviceId = request.DeviceId,
-                Type = Enum.Parse<Activity.ActivityType>(act.Type),
+                Type = act.Type,
                 Timestamp = dt
             });
         }
