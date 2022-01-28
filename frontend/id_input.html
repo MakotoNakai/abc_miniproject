@@ -1,0 +1,107 @@
+<html>
+
+  <head>
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <meta http-equiv="content-type" charset="UTF-8">
+  </head>
+
+  <body>
+
+  <h1 id="title">id入力 </h1>
+    <p id="result"></p>
+    <input type="text" id="id_input"/><br><br>
+    <input type="button" id=input_button value="確定" onclick="clickBtn()" />
+  </body>
+
+
+<!--  ===========================================  -->
+<script type="text/javascript">
+<!--  ===========================================  -->
+
+
+function firstscript() {
+  var query = location.search;
+  var temp = query.split('=');
+  var num=temp[1].split('&');
+  people_num=num[0];
+  group_num = num[1];
+  people_num=people_num-0;
+  group_num=group_num-0;
+  count=0;
+  count=count-0;
+
+  usr_id = new Array(people_num);
+}
+
+
+
+
+function clickBtn(){
+  if(count<people_num){
+    var temp=document.getElementById("id_input");
+    usr_id[count]=temp.value;
+    temp.value='';
+    window['count']+=1;
+
+    if(count==people_num){
+      document.getElementById('id_input').style.visibility = 'hidden';
+      document.getElementById('input_button').style.visibility = 'hidden';
+
+      var elem = document.getElementById("title");
+      elem.innerHTML = "グループ分け結果";
+
+      var send_data=new Object();
+      send_data.deviceIds = usr_id;
+      send_data.teamNumber = group_num;
+
+
+      // alert(send_data.deviceIds[1]);
+
+      $.ajax({
+        type:"POST",                // method = "POST"
+        url:"https://abcmini.warp-d.com/room",        // POST送信先のURL
+        data:JSON.stringify(send_data),  // JSONデータ本体
+        contentType: 'application/json', // リクエストの Content-Type
+        dataType: "json",           // レスポンスをJSONとしてパースする
+    }).done(function(data){
+      // alert(data);
+      // console.log(typeof(data));
+      // const temp_data = JSON.stringify(data);
+      // const from_json = JSON.parse(temp_data);
+      // //
+      // alert(from_json);
+      //
+      // console.log(typeof(from_json));
+
+
+      var stockList = '';
+      for (let i=0; i<group_num;i++){
+        stockList += '<li>';
+        for(let j=0;j<data.groups[i].length;j++){
+          stockList += ' ' + data.groups[i][j];
+        }
+        stockList += '</li>';
+      }
+
+      document.getElementById('result').innerHTML = stockList;
+
+    }).fail(function(XMLHttpRequest, textStatus, errorThrown){
+        alert('error!!!');
+　　     console.log("XMLHttpRequest : " + XMLHttpRequest.status);
+　　     console.log("textStatus     : " + textStatus);
+　　     console.log("errorThrown    : " + errorThrown.message);
+    }).always(function(data){
+      // alert("always");
+    });
+    }
+  }
+}
+
+
+
+
+// ページの読み込み完了と同時に実行されるよう指定
+window.onload = firstscript;
+  </script>
+
+</html>
