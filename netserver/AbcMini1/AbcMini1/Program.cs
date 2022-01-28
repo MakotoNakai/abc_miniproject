@@ -13,6 +13,9 @@ builder.Services.AddSwaggerGen(options => {
     options.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, xmlFile));
 });
 builder.Services.Configure<RouteOptions>(options => options.LowercaseUrls = true);
+builder.Services.AddCors(options => {
+    options.AddPolicy("allow_all", b => b.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod());
+});
 
 var app = builder.Build();
 
@@ -22,6 +25,10 @@ var app = builder.Build();
 app.UseSwagger();
 app.UseSwaggerUI();
 // }
+
+app.UseHttpLogging();
+
+app.UseCors("allow_all");
 
 // app.UseHttpsRedirection();
 

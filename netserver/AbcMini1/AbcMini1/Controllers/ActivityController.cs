@@ -7,14 +7,6 @@ namespace AbcMini1.Controllers;
 [ApiController]
 [Route("[controller]")]
 public class ActivityController : Controller {
-    // GET
-    [HttpGet]
-    public async Task<IActionResult> Index() {
-        var query = Db.Instance.Collection("activities")
-            .WhereEqualTo("DeviceId", "3");
-        var ss = await query.GetSnapshotAsync();
-        return Ok();
-    }
     
     /// <summary>
     /// （iOSアプリ用）行動データを記録します。
@@ -35,7 +27,7 @@ public class ActivityController : Controller {
             dt = DateTime.SpecifyKind(dt, DateTimeKind.Utc);
             await col.AddAsync(new Activity {
                 DeviceId = request.DeviceId,
-                Type = Enum.Parse<Activity.ActivityType>(act.Type),
+                Type = act.Type,
                 Timestamp = dt
             });
         }

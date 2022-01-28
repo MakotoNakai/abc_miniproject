@@ -4,10 +4,20 @@ namespace AbcMini1.Models;
 
 [FirestoreData]
 public class Activity : IComparable<Activity> {
-    [FirestoreProperty] public ActivityType Type { get; set; }
+    [FirestoreProperty] public string Type { get; set; }
     [FirestoreProperty] public DateTime Timestamp { get; set; }
     [FirestoreProperty] public string DeviceId { get; set; }
-    
+    [FirestoreProperty] public bool? Dummy { get; set; }
+
+    public Activity(string deviceId, string type, DateTime timestamp, bool dummy = false) {
+        Type = type;
+        Timestamp = timestamp;
+        DeviceId = deviceId;
+        Dummy = dummy;
+    }
+
+    public Activity() { }
+
     [FirestoreData(ConverterType = typeof(FirestoreEnumNameConverter<ActivityType>))]
     public enum ActivityType {
         Sit,
