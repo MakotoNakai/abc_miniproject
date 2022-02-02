@@ -41,7 +41,7 @@ public class Room {
 
                 foreach (var (deviceId2, da2) in activities) {
                     if (deviceId == deviceId2) break;
-                    var view2 = da.Timestamps.GetViewBetween(t, t + span);
+                    var view2 = da2.Timestamps.GetViewBetween(t, t + span);
                     if (view2.Count == 0) continue;
                     var kind2 = da2.Activities[view2.Min].Type.ToLowerInvariant();
                     if (kind2 == "sit") continue;
